@@ -47,20 +47,27 @@
         <ul id="messages"></ul>
         <form id="chattingBar" action="">
             <input id="m" autocomplete="off" />
-            <button type="submit">Send</button>
+            <button type="button" id="sendButton">Send</button>
         </form>
     </body>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        console.log(123);
-        console.log(321);
         const socket = io();
         const msg = document.getElementById("m");
-        document.getElementById("chattingBar").addEventListener("submit", (event) => {
-            //            event.preventDefault();
+        const messages = document.getElementById("messages");
+        const sendButton = document.getElementById("sendButton");
+
+        sendButton.addEventListener("click", (event) => {
             socket.emit("chat message", msg.value);
             msg.value = "";
             return false;
+        });
+
+        socket.on("chat message", (msg) => {
+            const chat = document.createElement("li");
+            chat.innerText = msg;
+            //console.log(chat);
+            messages.appendChild(chat);
         });
     </script>
 </html>
