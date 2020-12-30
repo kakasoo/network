@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<head></head>
+<body></body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io("ws://localhost:3000");
+
+    socket.on("connect", () => {
+        socket.send("Hello!");
+        socket.emit("salutations", "Hello!", { mr: "john" }, Uint8Array.from([1, 2, 3, 4]));
+    });
+
+    socket.on("message", (data) => console.log(data));
+    socket.on("greetings", (elem1, elem2, elem3) => console.log(elem1, elem2, elem3));
+</script>
