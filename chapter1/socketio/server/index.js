@@ -10,17 +10,19 @@ app.get("/", (req, res) => {
 });
 
 // io의 기능을 정의한다.
+// io는 자신과 연결된 socket들을 id 값을 key로 하는 Map에 저장하고,
+// event emit 시에 전체 socket 들에게 event를 전달한다.
 io.on("connection", (socket) => {
+    // console.log("server IO : ", io);
     // 새로 입장한 User가 있는 경우
     console.log("a user connected. : ", socket.id);
-    socket.broadcast.emit("Someone connected.");
 
     // 퇴장한 User가 있는 경우
     socket.on("disconnect", () => {
         console.log("A user disconnected.");
-        socket.broadcast.emit("Someone disconnected.");
     });
 
+    // socket 중에 채팅을 한 socket이 있는 경우 서버 측 io가 chat message 실행.
     socket.on("chat message", (msg) => {
         io.emit("chat message", msg);
     });
