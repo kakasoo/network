@@ -11,10 +11,19 @@ app.get("/", (req, res) => {
 
 // io의 기능을 정의한다.
 io.on("connection", (socket) => {
+    // 새로 입장한 User가 있는 경우
     console.log("a user connected. : ", socket.id);
+    socket.broadcast.emit("Someone connected.");
 
-    socket.on("disconnect", () => console.log("A user disconnected."));
-    socket.on("chat message", (msg) => console.log("message : ", msg));
+    // 퇴장한 User가 있는 경우
+    socket.on("disconnect", () => {
+        console.log("A user disconnected.");
+        socket.broadcast.emit("Someone disconnected.");
+    });
+
+    socket.on("chat message", (msg) => {
+        io.emit("chat message", msg);
+    });
 });
 
 // 연결을 위해 port 3000을 열어주었다.
